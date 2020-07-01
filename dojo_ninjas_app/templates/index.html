@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dojo and Nijjas</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <div class="container mt-5">
+  <div class="border row p5">
+    <div class="dojo col-sm-6">
+      <h4 class="text-primary">Add A Dojo</h4>
+      <form action="/process" method="POST" class="form-group">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Name" class="form-control mb-3">
+        <input type="text" name="city" placeholder="City" class="form-control mb-3">
+        <input type="text" name="state" placeholder="State" class="form-control mb-3">
+        <button class="btn btn-primary btn-sm">Add Dojo</button>
+      </form>
+    </div>
+
+    <div class="dojo col-sm-6">
+      <h4 class="text-secondary">Add A Ninja</h4>
+      <form action="/create" method="POST" class="form-group">
+        {% csrf_token %}
+        <input type="text" name="first" class="form-control mb-3" placeholder="First Name">
+        <input type="text" name="last" class="form-control mb-3" placeholder="Last Name">
+        <select name="dojo" class="form-control">
+          {% for dojo in dojos %}
+        
+          <option value="{{dojo.id}}">{{dojo.city}}</option>
+          {% endfor %}
+        </select>
+        <button class="btn btn-secondary mt-3 btn-sm">Add Ninja</button>
+      </form>
+    </div>
+  </div>
+  <div class="result">
+  <h5 class="text-primary text-uppercase mt-3 mb-3">All Dojos</h5>
+  {% for dojo in dojos %}
+  <div class="remo">
+  <p class="font-weight-bold">Ninjas at the , {{dojo.city}} dojo. ({{dojo.ninjas.count}})</p>
+  <form action="/delete" method="POST" class="form-group">
+    {% csrf_token %}
+    <input type="hidden" name="remove" value="{{dojo.id}}" class="form-control">
+    <button class="btn btn-danger btn-sm">Delete Dojo!</button>
+    </form>
+  </div>
+  <ul class="list-group">
+  {% for ninja in dojo.ninjas.all %}
+  <li class="list-group-item mb-3">{{ninja.first_name}} {{ninja.last_name}}</li>
+  {% endfor %}
+  </ul>
+  {% endfor %}
+  </div>
+  </div>
+</body>
+</html>
